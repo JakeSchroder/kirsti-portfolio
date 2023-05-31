@@ -28,10 +28,13 @@ export default function WorkRolodex(){
         };
     }, []);    
     
+
+    let minWorkIndex = Math.min(workTitles.length-2, Math.floor(scrollPosition/250));
+    let maxWorkIndex = Math.min(workTitles.length-1, Math.ceil(scrollPosition/250)+6);
     return(
         <div className="grid">
             <text>{scrollPosition}</text>
-            {workTitles.slice(Math.min(workTitles.length-2, Math.floor(scrollPosition/250)), Math.min(workTitles.length-1, Math.ceil(scrollPosition/250)+6)).map((currentTitle, key) =>{// Simplify later on
+            {workTitles.slice(minWorkIndex, maxWorkIndex).map((currentTitle, key) =>{// Simplify later on
                 let opacity = 1/key;
                 let fontSize = 8-key;
                 let paddingBottom = 6;
