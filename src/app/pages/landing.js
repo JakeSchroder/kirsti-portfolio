@@ -6,7 +6,7 @@ export default function LandingPage (){
 
 
     return (
-        <div className=" flex space-x-60">
+        <div className=" flex space-x-60 ">
             <WorkRolodex/>
             <WorkHero/>
         </div>

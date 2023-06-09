@@ -41,11 +41,11 @@ export default function WorkRolodex(){
 
     return(
         <div className='flex justify-left'>
-            <p className='text-4xl  px-12'>see more of</p>
-            <div id='work-title-list' className=" overflow-scroll snap-y snap-mandatory bg-green-700 h-96 ">
+            <p className=' relative text-4xl px-12 top-28'>see more of</p>
+            <div id='work-title-list' className=" overflow-scroll snap-y snap-mandatory h-96 ">
                 {workTitles.concat(workTitles).map((currentTitle, key) =>{// Simplify later on                    
                     return(
-                        <h1 key={key} id={key} className="text-6xl font-extrabold pb-9 snap-start select-none" >{currentTitle.name}</h1>
+                        <h1 key={key} id={key} alt={currentTitle.name} className="text-6xl font-extrabold pb-9 snap-start select-none" >{currentTitle.name}</h1>
                     )
                 })}
             </div>
