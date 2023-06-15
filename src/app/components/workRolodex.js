@@ -20,21 +20,25 @@ export default function WorkRolodex(){
     const firstElement = useRef(null);
     const lastElement = useRef(null);
     const workTitleList = useRef(null);
+    let firstElementPosition = 0;
+    let lastElementPosition = 0;
 
     useEffect(()=>{// Page starting state
-        console.log(firstElement.current.getBoundingClientRect().y, firstElement.current.getBoundingClientRect().y)
-        workTitleList.current.scrollTop = firstElement.current.getBoundingClientRect().y;
+        firstElementPosition = firstElement.current.getBoundingClientRect().y;
+        lastElementPosition = lastElement.current.getBoundingClientRect().y;
+        workTitleList.current.scrollTop = firstElementPosition;
     })
 
     const trackScrollPosition = () => {
         const scrollWorkTitleList = workTitleList.current;
         const scrollPosition = scrollWorkTitleList.scrollTop;
-        let firstElementPosition = firstElement.current.getBoundingClientRect().y;
-        let lastElementPosition = lastElement.current.getBoundingClientRect().y;
 
-        console.log(firstElementPosition, lastElementPosition, scrollPosition)
         if(scrollPosition >= lastElementPosition){// Scroll to the top when reaching the bottom
             scrollWorkTitleList.scrollTop = firstElementPosition;
+        }
+        else if(scrollPosition<=0){// Scroll to bottom when reaching the top
+            scrollWorkTitleList.scrollTop = lastElementPosition;
+
         }
       };
     
@@ -43,7 +47,7 @@ export default function WorkRolodex(){
             <p className=' relative text-4xl px-12 top-28'>see more of</p>
             <div id='work-title-list' ref={workTitleList} className=" overflow-scroll snap-y snap-mandatory h-96 no-scrollbar" onScroll={trackScrollPosition}>
                 {workTitles.concat(workTitles).concat(workTitles).map((currentTitle, key) =>{// Simplify later on
-                    if(key === workTitles.length-5){// First element to track
+                    if(key === workTitles.length-4){// First element to track
                         return(
                             <h1 key={key} id={key} ref={firstElement} alt={currentTitle.name} className="text-6xl font-extrabold pb-9 snap-start select-none" >{currentTitle.name}</h1>
                         )
