@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
+import { useInView, InView } from 'react-intersection-observer';
 
 let workTitles = [
     {name: 'playboy', genre: 'wardrobe styling', img_path: ''},
@@ -17,52 +18,44 @@ let workTitles = [
 ];
 
 export default function WorkRolodex(){
-    const firstElement = useRef(null);
-    const lastElement = useRef(null);
-    const workTitleList = useRef(null);
-    let firstElementPosition = 0;
-    let lastElementPosition = 0;
+    const titleRef = useRef(null);
+    const topBound = 9;
+    const bottomBound = 27;
 
-    useEffect(()=>{// Page starting state
-        firstElementPosition = firstElement.current.getBoundingClientRect().y;
-        lastElementPosition = lastElement.current.getBoundingClientRect().y;
-        workTitleList.current.scrollTop = firstElementPosition;
-    })
+    useEffect(() => {
+        titleRef.current.scrollTop = document.getElementById('7').getBoundingClientRect().y; // Position center of div scroll
+    }, []);
 
-    const trackScrollPosition = () => {
-        const scrollWorkTitleList = workTitleList.current;
-        const scrollPosition = scrollWorkTitleList.scrollTop;
-
-        if(scrollPosition >= lastElementPosition){// Scroll to the top when reaching the bottom
-            scrollWorkTitleList.scrollTop = firstElementPosition;
-        }
-        else if(scrollPosition<=0){// Scroll to bottom when reaching the top
-            scrollWorkTitleList.scrollTop = lastElementPosition;
-
-        }
-      };
-    
     return(
         <div className='flex justify-left'>
             <p className=' relative text-4xl px-12 top-28'>see more of</p>
-            <div id='work-title-list' ref={workTitleList} className=" overflow-scroll snap-y snap-mandatory h-96 no-scrollbar" onScroll={trackScrollPosition}>
-                {workTitles.concat(workTitles).concat(workTitles).map((currentTitle, key) =>{// Simplify later on
-                    if(key === workTitles.length-4){// First element to track
-                        return(
-                            <h1 key={key} id={key} ref={firstElement} alt={currentTitle.name} className="text-6xl font-extrabold pb-9 snap-start select-none" >{currentTitle.name}</h1>
-                        )
-                    }
-                    else if(key === (workTitles.length*2)-4){// Second element to track
-                        return(
-                            <h1 key={key} id={key} ref={lastElement} alt={currentTitle.name} className="text-6xl font-extrabold pb-9 snap-start select-none" >{currentTitle.name}</h1>
-                        )
-                    }    
-                    else{                       
-                        return(
-                            <h1 key={key} id={key} alt={currentTitle.name} className="text-6xl font-extrabold pb-9 snap-start select-none" >{currentTitle.name}</h1>
-                        )
-                    }
-                })}
+            <div id='work-title-list' ref={titleRef} className=" overflow-auto s h-96 no-scrollbar snap-y " >
+                <ul>
+                    {workTitles.concat(workTitles).concat(workTitles).map((currentTitle, key) =>{// Simplify later on
+                            if(key === topBound){
+                                return(// Scroll to bottom when reaching top bound
+                                    <InView key={key} className="text-6xl font-extrabold pb-9 snap-start select-none" as='li' onChange={(inView, entry) => inView ? titleRef.current.scrollTop = document.getElementById('28').getBoundingClientRect().y : ''}>
+                                        {currentTitle.name}
+                                    </InView>
+                                )
+                            }
+                            else if(key === bottomBound){
+                                return(// Scroll to top when reaching bottom bound
+                                    <InView key={key} className="text-6xl font-extrabold pb-9 snap-start select-none" as='li' onChange={(inView, entry) => inView ? titleRef.current.scrollTop = 1056 /* Get rid of hard number */: ''}>
+                                        {currentTitle.name}
+                                    </InView>
+                                )
+                            }
+                            else{
+                                return(
+                                    <li key={key} id={key} alt={currentTitle.name} className="text-6xl font-extrabold pb-9 snap-start select-none" >{currentTitle.name}</li>
+                                )
+                            }
+                    })}
+   
+
+
+                </ul>
             </div>
         </div>
     )
